@@ -90,11 +90,13 @@ const UserManagement = () => {
 
   const handleReset = () => {
     setPage(1);
+    setName("")
     setGender("");
     setBatch("");
     setAim("");
     setGroup("");
     setCoEd("");
+    setNumber("")
   };
 
   useEffect(() => {
