@@ -25,15 +25,25 @@ import { useGetProfileLogsQuery } from "../../redux/features/profile/profileApi"
 import {
   getUniqueAims,
   getUniqueBatches,
-  getUniqueGroups,
 } from "../../utils/userFiltering";
 
-const createData = (name, email,number, aim, batch, gender, institution, actions) => {
-  return { name, email,number, aim, batch, gender, institution, actions };
+const createData = (
+  name,
+  email,
+  number,
+  aim,
+  batch,
+  gender,
+  institution,
+  group,
+  actions
+) => {
+  return { name, email, number, aim, batch, gender, institution, group, actions };
 };
 
 const UserManagement = () => {
   const [page, setPage] = useState(1);
+  const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [batch, setBatch] = useState("");
   const [aim, setAim] = useState("");
@@ -43,6 +53,9 @@ const UserManagement = () => {
   const query = {};
   if (page) {
     query["page"] = page;
+  }
+  if (name) {
+    query["name"] = name;
   }
   if (gender) {
     query["gender"] = gender;
@@ -74,7 +87,6 @@ const UserManagement = () => {
 
   const batchGroup = getUniqueBatches(groupUsers?.data);
   const aimGroup = getUniqueAims(groupUsers?.data);
-  const groupGroup = getUniqueGroups(groupUsers?.data);
 
   const handleReset = () => {
     setPage(1);
@@ -97,6 +109,7 @@ const UserManagement = () => {
             user.batch,
             user.gender,
             user.institution,
+            user.group,
             <Box>
               <Button
                 variant="contained"
@@ -149,6 +162,14 @@ const UserManagement = () => {
           mb: 3,
         }}
       >
+       <TextField
+          label="Name"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          variant="outlined"
+          sx={{ minWidth: 120 }}
+        />
         <TextField
           label="Gender"
           name="gender"
@@ -196,15 +217,9 @@ const UserManagement = () => {
           name="group"
           value={group}
           onChange={(e) => setGroup(e.target.value)}
-          select
           variant="outlined"
           sx={{ minWidth: 120 }}
         >
-          {groupGroup.map((groupValue) => (
-            <MenuItem key={groupValue} value={groupValue}>
-              {groupValue}
-            </MenuItem>
-          ))}
         </TextField>
         <TextField
           label="CoEd"
@@ -225,8 +240,7 @@ const UserManagement = () => {
           onChange={(e) => setNumber(e.target.value)}
           variant="outlined"
           sx={{ minWidth: 120 }}
-        >
-        </TextField>
+        />
         <Button
           size="sm"
           variant="contained"
@@ -281,13 +295,19 @@ const UserManagement = () => {
                   align="center"
                   sx={{ fontSize: "20px", fontWeight: "semibold" }}
                 >
+                  Gender
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                >
                   Institution
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ fontSize: "20px", fontWeight: "semibold" }}
                 >
-                  Gender
+                  Group
                 </TableCell>
                 <TableCell
                   align="center"
@@ -301,10 +321,13 @@ const UserManagement = () => {
               {[...Array(10)].map((_, index) => (
                 <TableRow key={index}>
                   <TableCell>
-                    <Skeleton width={400} variant="text" />
+                    <Skeleton width={300} variant="text" />
                   </TableCell>
                   <TableCell align="center">
-                    <Skeleton width={500} variant="text" />
+                    <Skeleton width={300} variant="text" />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Skeleton variant="text" />
                   </TableCell>
                   <TableCell align="center">
                     <Skeleton variant="text" />
@@ -380,6 +403,12 @@ const UserManagement = () => {
                   align="center"
                   sx={{ fontSize: "20px", fontWeight: "semibold" }}
                 >
+                  Group
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                >
                   Actions
                 </TableCell>
               </TableRow>
@@ -390,65 +419,104 @@ const UserManagement = () => {
                   <TableCell
                     component="th"
                     scope="row"
-                    sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
                     {row?.name}
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
-                    {row?.email}
+                    <Tooltip
+                      title={row?.email.length > 15 ? row?.email : ""}
+                      arrow
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: "#00897b",
+                            color: "common.white",
+                            fontSize: 16,
+                            p: 2,
+                            borderRadius: 1,
+                          },
+                        },
+                        arrow: {
+                          sx: {
+                            color: "primary.main",
+                          },
+                        },
+                      }}
+                    >
+                      <Box component="span">
+                        {row?.email.length > 15
+                          ? `${row?.email.substring(0, 15)}...`
+                          : row?.email}
+                      </Box>
+                    </Tooltip>
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
                     {row?.number}
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
                     {row?.aim}
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
                     {row?.batch}
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
                     {row?.gender}
                   </TableCell>
-                  
-<TableCell
-  align="center"
-  sx={{ fontSize: "20px", fontWeight: "semibold" }}
->
-<Tooltip
-    title={row?.institution.length > 20 ? row?.institution : ''}
-    sx={{
-      tooltip: {
-        bgcolor: 'primary.main',
-        color: 'common.white',
-        fontSize: 14,
-        borderRadius: 1,
-      },
-      arrow: {
-        color: 'primary.main',
-      },
-    }}
-    arrow
-  >
-    <span>
-      {row?.institution.length > 20 ? `${row?.institution.substring(0, 20)}...` : row?.institution}
-    </span>
-  </Tooltip>
-</TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
+                  >
+                    <Tooltip
+                      title={
+                        row?.institution.length > 15 ? row?.institution : ""
+                      }
+                      arrow
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: "#0097a7",
+                            color: "common.white",
+                            fontSize: 16,
+                            p: 2,
+                            borderRadius: 1,
+                          },
+                        },
+                        arrow: {
+                          sx: {
+                            color: "primary.main",
+                          },
+                        },
+                      }}
+                    >
+                      <Box component="span">
+                        {row?.institution.length > 15
+                          ? `${row?.institution.substring(0, 15)}...`
+                          : row?.institution}
+                      </Box>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
+                  >
+                    {row?.group}
+                  </TableCell>
                   <TableCell align="center">{row.actions}</TableCell>
                 </TableRow>
               ))}
