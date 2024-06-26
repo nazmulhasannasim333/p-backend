@@ -15,6 +15,7 @@ import {
   Divider,
   TextField,
   MenuItem,
+  Tooltip,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useGetAllUserQuery } from "../../redux/features/users/usersApi";
@@ -27,8 +28,8 @@ import {
   getUniqueGroups,
 } from "../../utils/userFiltering";
 
-const createData = (name, email,number, aim, batch, gender, actions) => {
-  return { name, email,number, aim, batch, gender, actions };
+const createData = (name, email,number, aim, batch, gender, institution, actions) => {
+  return { name, email,number, aim, batch, gender, institution, actions };
 };
 
 const UserManagement = () => {
@@ -63,6 +64,7 @@ const UserManagement = () => {
   }
 
   const { data: allUsers, isFetching } = useGetAllUserQuery({ ...query });
+  console.log(allUsers);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const { data: profileLogs } = useGetProfileLogsQuery(selectedUser?.number, {
@@ -94,6 +96,7 @@ const UserManagement = () => {
             user.aim,
             user.batch,
             user.gender,
+            user.institution,
             <Box>
               <Button
                 variant="contained"
@@ -278,6 +281,12 @@ const UserManagement = () => {
                   align="center"
                   sx={{ fontSize: "20px", fontWeight: "semibold" }}
                 >
+                  Institution
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                >
                   Gender
                 </TableCell>
                 <TableCell
@@ -296,6 +305,9 @@ const UserManagement = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Skeleton width={500} variant="text" />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Skeleton variant="text" />
                   </TableCell>
                   <TableCell align="center">
                     <Skeleton variant="text" />
@@ -362,6 +374,12 @@ const UserManagement = () => {
                   align="center"
                   sx={{ fontSize: "20px", fontWeight: "semibold" }}
                 >
+                  Institution
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontSize: "20px", fontWeight: "semibold" }}
+                >
                   Actions
                 </TableCell>
               </TableRow>
@@ -406,6 +424,31 @@ const UserManagement = () => {
                   >
                     {row?.gender}
                   </TableCell>
+                  
+<TableCell
+  align="center"
+  sx={{ fontSize: "20px", fontWeight: "semibold" }}
+>
+<Tooltip
+    title={row?.institution.length > 20 ? row?.institution : ''}
+    sx={{
+      tooltip: {
+        bgcolor: 'primary.main',
+        color: 'common.white',
+        fontSize: 14,
+        borderRadius: 1,
+      },
+      arrow: {
+        color: 'primary.main',
+      },
+    }}
+    arrow
+  >
+    <span>
+      {row?.institution.length > 20 ? `${row?.institution.substring(0, 20)}...` : row?.institution}
+    </span>
+  </Tooltip>
+</TableCell>
                   <TableCell align="center">{row.actions}</TableCell>
                 </TableRow>
               ))}

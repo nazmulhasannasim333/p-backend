@@ -5,7 +5,6 @@ const usersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllUser: builder.query({
       query: (args) => {
-        console.log(args);
         return {
           url: `/users`,
           method: "GET",

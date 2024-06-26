@@ -2,8 +2,6 @@
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
-
-
 const CGModal = ({ open, handleClose, children }) => {
 
   const style = {
@@ -12,9 +10,11 @@ const CGModal = ({ open, handleClose, children }) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: { xs: "270px", sm: "700px", md: "1000px", lg: "1200px" },
+    maxHeight: '90vh', 
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
+    overflowY: 'auto',
   };
 
   return (
