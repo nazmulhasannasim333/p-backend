@@ -77,13 +77,13 @@ const UserManagement = () => {
   }
 
   const { data: allUsers, isFetching } = useGetAllUserQuery({ ...query });
-  console.log(allUsers);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const { data: profileLogs } = useGetProfileLogsQuery(selectedUser?.number, {
     skip: !selectedUser || isFetching | !modalOpen,
   });
-  const { data: groupUsers } = useGetAllUserQuery(undefined);
+  const { data: groupUsers } = useGetAllUserQuery({limit: 1000});
+  console.log(allUsers);
 
   const batchGroup = getUniqueBatches(groupUsers?.data);
   const aimGroup = getUniqueAims(groupUsers?.data);
@@ -255,6 +255,7 @@ const UserManagement = () => {
           Reset
         </Button>
       </Box>
+      <Typography variant="h5">Total found : <span style={{color: "#2196f3", fontSize: "25px"}}>{allUsers?.meta?.total}</span> </Typography>
       <TableContainer component={Paper} sx={{ my: 3, borderRadius: 5 }}>
         {isFetching ? (
           <Table
@@ -264,6 +265,9 @@ const UserManagement = () => {
           >
             <TableHead>
               <TableRow>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
+                  SN
+                </TableCell>
                 <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
                   Name
                 </TableCell>
@@ -320,11 +324,14 @@ const UserManagement = () => {
             <TableBody>
               {[...Array(10)].map((_, index) => (
                 <TableRow key={index}>
+                     <TableCell align="center">
+                    <Skeleton variant="text" />
+                  </TableCell>
                   <TableCell>
-                    <Skeleton width={300} variant="text" />
+                    <Skeleton width={200} variant="text" />
                   </TableCell>
                   <TableCell align="center">
-                    <Skeleton width={300} variant="text" />
+                    <Skeleton width={200} variant="text" />
                   </TableCell>
                   <TableCell align="center">
                     <Skeleton variant="text" />
@@ -359,6 +366,9 @@ const UserManagement = () => {
           >
             <TableHead>
               <TableRow>
+                <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
+                  SN
+                </TableCell>
                 <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
                   Name
                 </TableCell>
@@ -416,6 +426,13 @@ const UserManagement = () => {
             <TableBody>
               {rows?.map((row, index) => (
                 <TableRow key={index}>
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    sx={{ fontSize: "16px", fontWeight: "semibold" }}
+                  >
+                    {index + 1}
+                  </TableCell>
                   <TableCell
                     component="th"
                     scope="row"
