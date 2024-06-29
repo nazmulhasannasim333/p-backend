@@ -33,7 +33,8 @@ import {
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 
-const drawerWidth = 320;
+
+const drawerWidth = 250;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,

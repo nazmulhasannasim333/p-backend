@@ -36,9 +36,10 @@ const createData = (
   gender,
   institution,
   group,
-  actions
+  actions,
+  sn
 ) => {
-  return { name, email, number, aim, batch, gender, institution, group, actions };
+  return { name, email, number, aim, batch, gender, institution, group, actions, sn };
 };
 
 const UserManagement = () => {
@@ -83,7 +84,7 @@ const UserManagement = () => {
     skip: !selectedUser || isFetching | !modalOpen,
   });
   const { data: groupUsers } = useGetAllUserQuery({limit: 1000});
-  console.log(allUsers);
+  const rowsPerPage = allUsers?.meta?.limit;
 
   const batchGroup = getUniqueBatches(groupUsers?.data);
   const aimGroup = getUniqueAims(groupUsers?.data);
@@ -102,7 +103,7 @@ const UserManagement = () => {
   useEffect(() => {
     if (!isFetching) {
       setRows(
-        allUsers?.data?.map((user) =>
+        allUsers?.data?.map((user, idx) =>
           createData(
             user.name,
             user.email,
@@ -124,12 +125,13 @@ const UserManagement = () => {
               >
                 Details
               </Button>
-            </Box>
+            </Box>,
+            (page - 1) * rowsPerPage + idx + 1 
           )
         )
       );
     }
-  }, [allUsers, isFetching]);
+  }, [allUsers, isFetching, rowsPerPage, page]);
 
   const [rows, setRows] = useState([]);
 
@@ -236,6 +238,7 @@ const UserManagement = () => {
           <MenuItem value="false">False</MenuItem>
         </TextField>
         <TextField
+        type="number"
           label="Phone Number"
           name="number"
           value={number}
@@ -257,7 +260,7 @@ const UserManagement = () => {
           Reset
         </Button>
       </Box>
-      <Typography variant="h5">Total found : <span style={{color: "#2196f3", fontSize: "25px"}}>{allUsers?.meta?.total}</span> </Typography>
+      <Typography variant="h5">Total user found : <span style={{color: "#2196f3", fontSize: "25px"}}>{allUsers?.meta?.total}</span> </Typography>
       <TableContainer component={Paper} sx={{ my: 3, borderRadius: 5 }}>
         {isFetching ? (
           <Table
@@ -267,10 +270,10 @@ const UserManagement = () => {
           >
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
+                <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "semibold" }}>
                   SN
                 </TableCell>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
+                <TableCell   align="center" sx={{ fontSize: "20px", fontWeight: "semibold" }}>
                   Name
                 </TableCell>
                 <TableCell
@@ -368,7 +371,7 @@ const UserManagement = () => {
           >
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
+                <TableCell align="center" sx={{ fontSize: "20px", fontWeight: "semibold" }}>
                   SN
                 </TableCell>
                 <TableCell sx={{ fontSize: "20px", fontWeight: "semibold" }}>
@@ -426,14 +429,15 @@ const UserManagement = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows?.map((row, index) => (
-                <TableRow key={index}>
+              {rows?.map((row) => (
+                <TableRow key={row._id}>
                   <TableCell
+                  align="center"
                     component="th"
                     scope="row"
                     sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
-                    {index + 1}
+                     {row.sn}
                   </TableCell>
                   <TableCell
                     component="th"
@@ -595,7 +599,7 @@ const UserManagement = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {profileLogs?.map((log, index) => (
+                  {profileLogs?.data?.map((log, index) => (
                     <TableRow key={index}>
                       <TableCell>{log?.name}</TableCell>
                       <TableCell>{log?.email}</TableCell>
