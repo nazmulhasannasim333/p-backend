@@ -1,10 +1,13 @@
 import { Button, FormControlLabel, MenuItem, Pagination, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
-import { useGetAllTaskQuery, useUpdateStatusMutation } from "../../redux/features/tasks/tasksApi";
+import { useCreateTaskMutation, useGetAllTaskQuery, useUpdateStatusMutation } from "../../redux/features/tasks/tasksApi";
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 import { Link } from "react-router-dom";
+import CGModal from "../../components/Modal/CGModal";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
@@ -54,7 +57,9 @@ const createData = (
 
 
 const TaskManagement = () => {
+  const [modalOpen, setModalOpen] = useState(false);
     const [page, setPage] = useState(1);
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [status, setStatus] = useState("")
     const query = {}
     if (status) {
@@ -62,7 +67,25 @@ const TaskManagement = () => {
       }
     const { data: allTasks, isFetching, isLoading } = useGetAllTaskQuery({...query});
     const [updateActiveStatus] = useUpdateStatusMutation()
+    const [createTask] = useCreateTaskMutation()
     const rowsPerPage = allTasks?.meta?.limit;
+
+    const onSubmit = async (data) => {
+      const toastId = toast.loading("Creating task...");
+      try {
+
+        const res = await createTask(data)
+        if(res?.data?.success === true){
+          toast.success("Task created successfully", {
+            id: toastId,
+            duration: 2000,
+          });
+          handleCloseModal();
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
+    };
 
 
     useEffect(() => {
@@ -105,12 +128,20 @@ const TaskManagement = () => {
         await updateActiveStatus(id)
       }
 
+      const handleCreateTaskModal =() => {
+        setModalOpen(true);
+      }
+
+      const handleCloseModal = () => {
+        setModalOpen(false);
+      };
+
 
     return (
         <Box
         sx={{
           my: 10,
-          width: { xs: "270px", sm: "700px", md: "100%", lg: "100%" },
+          width: { xs: "320px", sm: "700px", md: "100%", lg: "100%" },
           mx: "auto",
         }}
       >
@@ -118,11 +149,20 @@ const TaskManagement = () => {
         sx={{
           display: "flex",
           justifyContent: "space-between",
-          flexWrap: "wrap",
           gap: 2,
           mb: 3,
         }}
-      >
+      > <Button
+      variant="contained"
+      sx={{
+        textTransform: "none",
+        fontWeight: 700,
+        fontSize: 16,
+      }}
+      onClick={() => handleCreateTaskModal()}
+    >
+      Create Task
+    </Button>
         <TextField
           label="Status"
           name="status"
@@ -131,13 +171,56 @@ const TaskManagement = () => {
           select
           defaultValue="All Task"
           variant="outlined"
-          sx={{ minWidth: 120 }}
+          sx={{ minWidth: 120, height:5 }}
         >
           <MenuItem value="">All Task</MenuItem>
           <MenuItem value="true">Active</MenuItem>
           <MenuItem value="false">Deactivate</MenuItem>
         </TextField>
       </Box>
+      <CGModal open={modalOpen} handleClose={handleCloseModal}>
+      <h2>Create a Task</h2>
+      <form onSubmit={handleSubmit(onSubmit)} >
+        <TextField
+          label="Title"
+          {...register('title', { required: 'Title is required' })}
+          fullWidth
+          margin="normal"
+          error={!!errors.title}
+          helperText={errors.title ? errors.title.message : ''}
+        />
+        <TextField
+          label="Description"
+          {...register('description', { required: 'Description is required' })}
+          fullWidth
+          margin="normal"
+          multiline
+          rows={4}
+          error={!!errors.description}
+          helperText={errors.description ? errors.description.message : ''}
+        />
+        <TextField
+          label="Deadline"
+          type="datetime-local"
+          {...register('deadline', { required: 'Deadline is required' })}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          error={!!errors.deadline}
+          helperText={errors.deadline ? errors.deadline.message : ''}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          style={{ marginTop: '20px' }}
+        >
+          Create Task
+        </Button>
+      </form>
+    </CGModal>
       <Typography variant="h5">Total task found : <span style={{color: "#2196f3", fontSize: "25px"}}>{allTasks?.meta?.total}</span> </Typography>
             <TableContainer component={Paper} sx={{ my: 3, borderRadius: 5 }}>
         {isLoading ? (

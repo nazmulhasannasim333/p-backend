@@ -11,7 +11,7 @@ const profileApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
-      providesTags: ["users"],
+      providesTags: ["profileLogs"],
     }),
   }),
 });

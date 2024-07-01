@@ -153,7 +153,7 @@ const UserManagement = () => {
     <Box
       sx={{
         my: 10,
-        width: { xs: "270px", sm: "700px", md: "100%", lg: "100%" },
+        width: { xs: "320px", sm: "700px", md: "100%", lg: "100%" },
         mx: "auto",
       }}
     >
@@ -216,16 +216,7 @@ const UserManagement = () => {
             </MenuItem>
           ))}
         </TextField>
-        <TextField
-          label="Group"
-          name="group"
-          value={group}
-          onChange={(e) => setGroup(e.target.value)}
-          variant="outlined"
-          sx={{ minWidth: 120 }}
-        >
-        </TextField>
-        <TextField
+         <TextField
           label="CoEd"
           name="coEd"
           value={coEd}
@@ -237,6 +228,16 @@ const UserManagement = () => {
           <MenuItem value="true">True</MenuItem>
           <MenuItem value="false">False</MenuItem>
         </TextField>
+        <TextField
+          label="Group"
+          name="group"
+          value={group}
+          onChange={(e) => setGroup(e.target.value)}
+          variant="outlined"
+          sx={{ minWidth: 120 }}
+        >
+        </TextField>
+       
         <TextField
         type="number"
           label="Phone Number"
@@ -598,9 +599,9 @@ const UserManagement = () => {
                     <TableCell>Submit Date</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {profileLogs?.data?.map((log, index) => (
-                    <TableRow key={index}>
+                {profileLogs?.data?.length ? <TableBody>
+                  {profileLogs?.data?.map((log) => (
+                    <TableRow key={log._id}>
                       <TableCell>{log?.name}</TableCell>
                       <TableCell>{log?.email}</TableCell>
                       <TableCell>{log?.gender}</TableCell>
@@ -614,7 +615,7 @@ const UserManagement = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                </TableBody>
+                </TableBody> : <Typography textAlign="center" py={2}>No profile logs found</Typography>}
               </Table>
             </TableContainer>
           </Box>

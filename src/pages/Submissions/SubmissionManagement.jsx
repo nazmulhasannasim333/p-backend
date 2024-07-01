@@ -140,7 +140,7 @@ const SubmissionManagement = () => {
     <Box
       sx={{
         my: 10,
-        width: { xs: "270px", sm: "700px", md: "100%", lg: "100%" },
+        width: { xs: "320px", sm: "700px", md: "100%", lg: "100%" },
         mx: "auto",
       }}
     >
@@ -206,7 +206,7 @@ const SubmissionManagement = () => {
                   align="center"
                   sx={{ fontSize: "20px", fontWeight: "semibold" }}
                 >
-                  Submitted At
+                  Submitted Date
                 </TableCell>
                 <TableCell
                   align="center"
@@ -286,7 +286,7 @@ const SubmissionManagement = () => {
                   align="center"
                   sx={{ fontSize: "20px", fontWeight: "semibold" }}
                 >
-                  Submitted At
+                  Submitted Date
                 </TableCell>
                 <TableCell
                   align="center"
