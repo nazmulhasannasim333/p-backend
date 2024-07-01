@@ -18,12 +18,15 @@ import {
     Logout as LogoutIcon,
   } from "@mui/icons-material";
   import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/features/auth/authSlice.js";
   
   
   const MobileAppbar = () => {
     const appBarZIndex = 1200;
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate()
+  const dispatch = useDispatch();
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -31,6 +34,13 @@ import {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
+
   
 
   
@@ -92,7 +102,7 @@ import {
                 <ManageAccountsIcon sx={{ fontSize: 20, mr: "7px" }} /> Profile
               </MenuItem>
               <Divider />
-              <MenuItem>
+              <MenuItem onClick={handleLogout}>
                 <LogoutIcon sx={{ fontSize: 20, mr: "7px" }} /> Logout
               </MenuItem>
             </Menu>

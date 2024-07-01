@@ -31,6 +31,8 @@ import {
   Logout as LogoutIcon,
 } from "@mui/icons-material";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectCurrentUser } from "../../redux/features/auth/authSlice";
 
 
 
@@ -116,6 +118,8 @@ const MainLayout = () => {
   const [open, setOpen] = React.useState(true);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate()
+  const user = useSelector(selectCurrentUser);
+  const dispatch = useDispatch();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -132,6 +136,12 @@ const MainLayout = () => {
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
   };
 
 
@@ -197,7 +207,7 @@ const MainLayout = () => {
                           fontWeight: "600",
                         }}
                       >
-                        {"Nasim"}
+                        {user?.name}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -206,7 +216,7 @@ const MainLayout = () => {
                           fontWeight: "300",
                         }}
                       >
-                        {"nasim@Gmail.com"}
+                        {user?.email}
                       </Typography>
                     </Box>
                   </Stack>
@@ -234,9 +244,20 @@ const MainLayout = () => {
                 <ManageAccountsIcon sx={{ fontSize: 20, mr: "7px" }} /> Profile
               </MenuItem>
               <Divider />
-              <MenuItem>
-                <LogoutIcon sx={{ fontSize: 20, mr: "7px" }} /> Logout
-              </MenuItem>
+              {
+                user ? <MenuItem onClick={handleLogout}>
+                  <LogoutIcon sx={{ fontSize: 20, mr: "7px" }} /> 
+                  Logout
+                </MenuItem>
+                 :
+                <MenuItem onClick={() => {
+                  handleCloseUserMenu();
+                  navigate(`/login`);
+                }}>
+                  <LogoutIcon sx={{ fontSize: 20, mr: "7px" }} /> 
+                  Login
+                </MenuItem>
+              }
             </Menu>
                 </Box>
               </Box>

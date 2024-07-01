@@ -1,10 +1,11 @@
 import MainLayout from './components/layout/MainLayout';
+import PrivateRoute from './routes/PrivateRoutes';
 
 const App = () => {
   return (
-    <div>
+    <PrivateRoute>
       <MainLayout />
-    </div>
+    </PrivateRoute>
   );
 };
 

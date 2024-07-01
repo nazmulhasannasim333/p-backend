@@ -4,6 +4,7 @@ import DashboardManagement from "../pages/Dashboard/DashboardManagement";
 import UserManagement from "../pages/Users/UserManagement";
 import TaskManagement from "../pages/Tasks/TaskManagement";
 import SubmissionManagement from "../pages/Submissions/SubmissionManagement";
+import Login from "../pages/Login/Login";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,12 @@ const router = createBrowserRouter([
         ),
       },
     ]
+  },
+  {
+    path: "/login",
+    element: (
+        <Login />
+    ),
   },
 ]);
 
