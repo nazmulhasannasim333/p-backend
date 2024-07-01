@@ -95,13 +95,18 @@ const SubmissionManagement = () => {
             submission.status,
             submission.submittedAt,
             <Box>
-              <Button
-                onClick={() => handleOpenModal(submission)}
-                variant="contained"
-              >
-                View PDF
-              </Button>
-            </Box>,
+            <Button
+             onClick={() => handleOpenModal(submission)}
+              variant="contained"
+              sx={{
+                textTransform: "none",
+                fontWeight: 700,
+                fontSize: 16,
+              }}
+            >
+              PDF
+            </Button>
+          </Box>,
             (page - 1) * rowsPerPage + idx + 1
           )
         )

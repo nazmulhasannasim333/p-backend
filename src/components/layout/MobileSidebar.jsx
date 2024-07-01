@@ -128,7 +128,40 @@ const MobileSidebar = () => {
             </ListItemIcon> <ListItemText primary="Users" sx={{ opacity: 1 }} />
           </ListItemButton>
         </ListItem>
-          <Divider />
+        <ListItem disablePadding sx={{ display: "block" }}>
+          <ListItemButton
+          onClick={() => setOpen(false)}
+            component={NavLink}
+            to="/tasks"
+            end
+            sx={{
+              minHeight: 54,
+              justifyContent: "initial",
+              px: 4,
+              py: 2,
+              "&.active": {
+                borderLeft: "5px solid #FF0000",
+                backgroundColor: "#FFE9E9",
+                "& .MuiListItemIcon-root": {
+                  color: "#FF0000",
+                },
+                "& .MuiListItemText-root": {
+                  color: "#FF0000",
+                },
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: 2,
+                justifyContent: "center",
+              }}
+            >
+              <AssignmentIndIcon sx={{ fontSize: 30 }} />
+            </ListItemIcon> <ListItemText primary="Tasks" sx={{ opacity: 1 }} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
         </List>
