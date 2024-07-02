@@ -78,6 +78,9 @@ const TaskManagement = () => {
   const [selectedTask, setSelectedTask] = useState({});
   const [openLectures, setOpenLectures] = useState(false);
   const query = {};
+  if (page) {
+    query["page"] = page;
+  }
   if (status) {
     query["active"] = status;
   }
@@ -91,9 +94,18 @@ const TaskManagement = () => {
   const rowsPerPage = allTasks?.meta?.limit;
 
   const onSubmit = async (data) => {
+    const regex = /\[BUTTON\]\s*(.*?)\s*\|\s*(.*?)\s*\[BUTTON\]/g;
+    const replaceDescription = data?.description?.replace(regex, (match, title, url) => {
+      return `<a style='display: inline-block; margin: 10px' href='${url}' class='primary_btn round small' target='__blank'>${title}</a>`;
+    });
     const toastId = toast.loading("Creating task...");
     try {
-      const res = await createTask(data);
+      const newTaskData = {
+        title: data.title,
+        description: replaceDescription,
+        deadline: data.deadline
+      }
+      const res = await createTask(newTaskData);
       if (res?.data?.success === true) {
         toast.success("Task created successfully", {
           id: toastId,
