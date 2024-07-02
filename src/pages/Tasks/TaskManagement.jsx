@@ -87,7 +87,6 @@ const TaskManagement = () => {
   const {
     data: allTasks,
     isFetching,
-    isLoading,
   } = useGetAllTaskQuery({ ...query });
   const [updateActiveStatus] = useUpdateStatusMutation();
   const [createTask] = useCreateTaskMutation();
@@ -309,7 +308,7 @@ const TaskManagement = () => {
         </span>{" "}
       </Typography>
       <TableContainer component={Paper} sx={{ my: 3, borderRadius: 5 }}>
-        {isLoading ? (
+        {isFetching ? (
           <Table
             sx={{ minWidth: 650 }}
             size="medium"
