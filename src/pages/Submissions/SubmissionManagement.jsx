@@ -1,9 +1,10 @@
 import {
   Button,
-  FormControlLabel,
+  FormControl,
   MenuItem,
   Pagination,
   Paper,
+  Select,
   Skeleton,
   Table,
   TableBody,
@@ -20,45 +21,9 @@ import {
   useGetAllSubmissionQuery,
   useUpdateSubmissionStatusMutation,
 } from "../../redux/features/submissions/submissionsApi";
-import { styled } from "@mui/material/styles";
-import Switch from "@mui/material/Switch";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import CGModal from "../../components/Modal/CGModal";
-import { getGoogleDriveViewerLink } from "../../utils/convertDrivelink";
-
-const Android12Switch = styled(Switch)(({ theme }) => ({
-  padding: 8,
-  "& .MuiSwitch-track": {
-    borderRadius: 22 / 2,
-    "&::before, &::after": {
-      content: '""',
-      position: "absolute",
-      top: "50%",
-      transform: "translateY(-50%)",
-      width: 16,
-      height: 16,
-    },
-    "&::before": {
-      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-        theme.palette.getContrastText(theme.palette.primary.main)
-      )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
-      left: 12,
-    },
-    "&::after": {
-      backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-        theme.palette.getContrastText(theme.palette.primary.main)
-      )}" d="M19,13H5V11H19V13Z" /></svg>')`,
-      right: 12,
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxShadow: "none",
-    width: 16,
-    height: 16,
-    margin: 2,
-  },
-}));
 
 const createData = (id, name, group, number, status, submittedAt, pdf, sn) => {
   return { id, name, group, number, status, submittedAt, pdf, sn };
@@ -67,25 +32,29 @@ const createData = (id, name, group, number, status, submittedAt, pdf, sn) => {
 const SubmissionManagement = () => {
   const { taskId } = useParams();
   const [page, setPage] = useState(1);
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("");
   const [number, setNumber] = useState("");
-  const query = {}
+  const query = {};
+  if (page) {
+    query["page"] = page;
+  }
   if (status) {
-      query["status"] = status;
-    }
-    if (number) {
-      query["number"] = number;
-    }
-  const {
-    data: submissionData,
-    isFetching,
-    isLoading,
-  } = useGetAllSubmissionQuery({ id: taskId, query });
+    query["status"] = status;
+  }
+  if (number) {
+    query["number"] = number;
+  }
+  const { data: submissionData, isFetching } = useGetAllSubmissionQuery({
+    id: taskId,
+    query,
+  });
   const rowsPerPage = submissionData?.meta?.limit;
   const [rows, setRows] = useState([]);
   const [updateSubmissionStatus] = useUpdateSubmissionStatusMutation();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectSubmission, setSelectSubmission] = useState({});
+
+  // console.log(submissionData);
 
   useEffect(() => {
     if (!isFetching && submissionData) {
@@ -99,18 +68,18 @@ const SubmissionManagement = () => {
             submission.status,
             submission.submittedAt,
             <Box>
-            <Button
-             onClick={() => handleOpenModal(submission)}
-              variant="contained"
-              sx={{
-                textTransform: "none",
-                fontWeight: 700,
-                fontSize: 16,
-              }}
-            >
-              PDF
-            </Button>
-          </Box>,
+              <Button
+                onClick={() => handleOpenModal(submission)}
+                variant="contained"
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 700,
+                  fontSize: 16,
+                }}
+              >
+                PDF
+              </Button>
+            </Box>,
             (page - 1) * rowsPerPage + idx + 1
           )
         )
@@ -122,18 +91,18 @@ const SubmissionManagement = () => {
     setPage(value);
   };
 
-  const handleStatusChange = async (id) => {
-    await updateSubmissionStatus(id);
+  const handleStatusChange = async (id, status) => {
+    await updateSubmissionStatus({id, status});
   };
 
   const handleOpenModal = (sub) => {
     if (sub.pdf) {
-        setSelectSubmission(sub);
-        setModalOpen(true);
+      setSelectSubmission(sub);
+      setModalOpen(true);
     } else {
-        console.error("PDF link is not available for this submission.");
+      console.error("PDF link is not available for this submission.");
     }
-};
+  };
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -148,7 +117,7 @@ const SubmissionManagement = () => {
         mx: "auto",
       }}
     >
-          <Box
+      <Box
         sx={{
           display: "flex",
           justifyContent: "space-between",
@@ -168,11 +137,12 @@ const SubmissionManagement = () => {
           sx={{ minWidth: 120 }}
         >
           <MenuItem value="">All Submission</MenuItem>
-          <MenuItem value="approved">Approved</MenuItem>
-          <MenuItem value="pending">Pending</MenuItem>
+          <MenuItem value="Pending">Pending</MenuItem>
+          <MenuItem value="Approved">Approved</MenuItem>
+          <MenuItem value="Rejected">Rejected</MenuItem>
         </TextField>
         <TextField
-        type="number"
+          type="number"
           label="Phone Number"
           name="number"
           value={number}
@@ -181,9 +151,14 @@ const SubmissionManagement = () => {
           sx={{ minWidth: 120 }}
         />
       </Box>
-      <Typography variant="h5">Total submission found : <span style={{color: "#2196f3", fontSize: "25px"}}>{submissionData?.meta?.total}</span> </Typography>
+      <Typography variant="h5">
+        Total submission found :{" "}
+        <span style={{ color: "#2196f3", fontSize: "25px" }}>
+          {submissionData?.meta?.total}
+        </span>{" "}
+      </Typography>
       <TableContainer component={Paper} sx={{ my: 3, borderRadius: 5 }}>
-        {isLoading ? (
+        {isFetching ? (
           <Table
             sx={{ minWidth: 650 }}
             size="medium"
@@ -356,13 +331,21 @@ const SubmissionManagement = () => {
                     align="center"
                     sx={{ fontSize: "16px", fontWeight: "semibold" }}
                   >
-                    <FormControlLabel
-                      control={
-                        <Android12Switch checked={row.status === "approved"} />
-                      }
-                      label={row.status === "approved" ? "Approved" : "Pending"}
-                      onChange={() => handleStatusChange(row.id)}
-                    />
+                    <FormControl fullWidth size="small">
+                      <Select
+                        labelId={`select-label-${row?.id}`}
+                        id={`select-${row?.id}`}
+                        value={row?.status}
+                        label={row?.status}
+                        onChange={(event) =>
+                          handleStatusChange(row.id, event.target.value)
+                        }
+                      >
+                        <MenuItem value="Pending">Pending</MenuItem>
+                        <MenuItem value="Approved">Approved</MenuItem>
+                        <MenuItem value="Rejected">Rejected</MenuItem>
+                      </Select>
+                    </FormControl>
                   </TableCell>
                   <TableCell
                     align="center"
@@ -376,30 +359,31 @@ const SubmissionManagement = () => {
           </Table>
         )}
       </TableContainer>
-      {!isFetching && submissionData?.meta && (
-        <Box display="flex" justifyContent="center" sx={{ my: 3 }}>
-          <Pagination
-            count={submissionData.meta.totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            size="large"
-          />
-        </Box>
-      )}
-    <CGModal open={modalOpen} handleClose={handleCloseModal}>
-    {selectSubmission.pdf ? (
-        <iframe 
-            src={getGoogleDriveViewerLink(selectSubmission.pdf)} 
-            title="PDF Viewer" 
-            width="100%" 
+      {isFetching ||
+        (submissionData?.meta && (
+          <Box display="flex" justifyContent="center" sx={{ my: 3 }}>
+            <Pagination
+              count={submissionData.meta.totalPages}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+              size="large"
+            />
+          </Box>
+        ))}
+      <CGModal open={modalOpen} handleClose={handleCloseModal}>
+        {selectSubmission.pdf ? (
+          <iframe
+            src={`https://cg-storage.site/pdfs/${selectSubmission.pdf}`}
+            title="PDF Viewer"
+            width="100%"
             height="500px"
-            style={{ border: 'none' }}
-        />
-    ) : (
-        <Typography variant="body1">PDF link is not available.</Typography>
-    )}
-</CGModal>
+            style={{ border: "none" }}
+          />
+        ) : (
+          <Typography variant="body1">PDF link is not available.</Typography>
+        )}
+      </CGModal>
     </Box>
   );
 };

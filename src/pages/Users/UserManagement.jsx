@@ -548,7 +548,7 @@ const UserManagement = () => {
           </Table>
         )}
       </TableContainer>
-      {!isFetching && allUsers?.meta && (
+      {allUsers?.meta && (
         <Box display="flex" justifyContent="center" sx={{ my: 3 }}>
           <Pagination
             count={allUsers.meta.totalPages}

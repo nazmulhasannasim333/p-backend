@@ -12,7 +12,7 @@ const CGModal = ({ open, handleClose, children }) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: { xs: "320px", sm: "700px", md: "1000px", lg: "1200px" },
-    maxHeight: '90vh', 
+    maxHeight: '100vh', 
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,

@@ -5,7 +5,6 @@ const submissionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllSubmission: builder.query({
       query: ({id, query}) => {
-        console.log(query);
         return {
           url: `/submission/${id}`,
           method: "GET",
@@ -15,10 +14,11 @@ const submissionApi = baseApi.injectEndpoints({
       providesTags: ["submission"],
     }),
     updateSubmissionStatus: builder.mutation({
-        query: (id) => {
+        query: ({id, status}) => {
           return {
             url: `/submission/${id}`,
-            method: "PATCH",
+            method: "PUT",
+            body: {status}
           };
         },
         invalidatesTags: ["submission"]
