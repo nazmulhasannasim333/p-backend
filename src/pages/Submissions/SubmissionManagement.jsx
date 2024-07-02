@@ -68,9 +68,13 @@ const SubmissionManagement = () => {
   const { taskId } = useParams();
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState("")
+  const [number, setNumber] = useState("");
   const query = {}
   if (status) {
       query["status"] = status;
+    }
+    if (number) {
+      query["number"] = number;
     }
   const {
     data: submissionData,
@@ -167,6 +171,15 @@ const SubmissionManagement = () => {
           <MenuItem value="approved">Approved</MenuItem>
           <MenuItem value="pending">Pending</MenuItem>
         </TextField>
+        <TextField
+        type="number"
+          label="Phone Number"
+          name="number"
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+          variant="outlined"
+          sx={{ minWidth: 120 }}
+        />
       </Box>
       <Typography variant="h5">Total submission found : <span style={{color: "#2196f3", fontSize: "25px"}}>{submissionData?.meta?.total}</span> </Typography>
       <TableContainer component={Paper} sx={{ my: 3, borderRadius: 5 }}>

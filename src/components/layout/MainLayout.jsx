@@ -178,7 +178,7 @@ const MainLayout = () => {
                 }}
               >
                 <Box>
-                 <Typography variant="h5"><span style={{color: "#2196f3", fontSize: "30px"}}>Welcome!</span> Md Nasim Hosen</Typography>
+                 <Typography variant="h5"><span style={{color: "#2196f3", fontSize: "30px"}}>Welcome! </span>{user?.name}</Typography>
                 </Box>
                 <Box
                   sx={{
