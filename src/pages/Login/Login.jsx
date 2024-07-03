@@ -15,7 +15,7 @@ const Login = () => {
 
     const handleLogoClick = () => {
         if (user) {
-            navigate('/');
+            navigate('/blogs');
         } else {
             navigate('/login');
         }
@@ -32,7 +32,7 @@ const Login = () => {
                     id: toastId,
                     duration: 2000,
                 });
-                navigate("/");
+                navigate("/blogs");
             }
         } catch (error) {
             toast.error("Failed to login", {
@@ -58,7 +58,7 @@ const Login = () => {
                         style={{ cursor: 'pointer', textDecoration: "none", display: 'flex', justifyContent: 'center' }}
                     >
                         <Typography variant="h4" color="primary" gutterBottom>
-                            CG Logo
+                            Portfolio Dashboard
                         </Typography>
                     </Link>
                     <Typography variant="h5" textAlign="center" gutterBottom>
@@ -72,14 +72,14 @@ const Login = () => {
                         gap={2}
                     >
                         <Controller
-                            name="number"
+                            name="email"
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    label="Number"
-                                    type="number"
+                                    label="Email"
+                                    type="email"
                                     fullWidth
                                     required
                                 />

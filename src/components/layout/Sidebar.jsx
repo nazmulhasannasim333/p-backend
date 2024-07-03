@@ -8,8 +8,6 @@ import {
     ListItemText,
   } from "@mui/material";
   import Box from "@mui/material/Box";
-  import DashboardIcon from "@mui/icons-material/Dashboard";
-  import PeopleIcon from '@mui/icons-material/People';
   import HelpCenterIcon from "@mui/icons-material/HelpCenter";
 import { NavLink } from "react-router-dom";
 import TaskIcon from '@mui/icons-material/Task';
@@ -23,75 +21,7 @@ import TaskIcon from '@mui/icons-material/Task';
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               component={NavLink}
-              to="/"
-              end
-              sx={{
-                minHeight: 54,
-                justifyContent: "initial",
-                px: 4,
-                py: 2,
-                "&.active": {
-                  borderLeft: "5px solid #FF0000",
-                  backgroundColor: "#FFE9E9",
-                  "& .MuiListItemIcon-root": {
-                    color: "#FF0000",
-                  },
-                  "& .MuiListItemText-root": {
-                    color: "#FF0000",
-                  },
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: 2,
-                  justifyContent: "center",
-                }}
-              >
-                <DashboardIcon sx={{ fontSize: 30 }} />
-              </ListItemIcon>
-              {open && <ListItemText primary="Dashboard" sx={{ opacity: 1 }} />}
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              component={NavLink}
-              to="/users"
-              end
-              sx={{
-                minHeight: 54,
-                justifyContent: "initial",
-                px: 4,
-                py: 2,
-                "&.active": {
-                  borderLeft: "5px solid #FF0000",
-                  backgroundColor: "#FFE9E9",
-                  "& .MuiListItemIcon-root": {
-                    color: "#FF0000",
-                  },
-                  "& .MuiListItemText-root": {
-                    color: "#FF0000",
-                  },
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: 2,
-                  justifyContent: "center",
-                }}
-              >
-                <PeopleIcon sx={{ fontSize: 30 }} />
-              </ListItemIcon>
-              {open && <ListItemText primary="User Management" sx={{ opacity: 1 }} />}
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              component={NavLink}
-              to="/tasks"
+              to="/blogs"
               end
               sx={{
                 minHeight: 54,
@@ -119,7 +49,7 @@ import TaskIcon from '@mui/icons-material/Task';
               >
                 <TaskIcon sx={{ fontSize: 30 }} />
               </ListItemIcon>
-              {open && <ListItemText primary="Task Management" sx={{ opacity: 1 }} />}
+              {open && <ListItemText primary="Blogs" sx={{ opacity: 1 }} />}
             </ListItemButton>
           </ListItem>
         </List>

@@ -1,10 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import DashboardManagement from "../pages/Dashboard/DashboardManagement";
-import UserManagement from "../pages/Users/UserManagement";
-import TaskManagement from "../pages/Tasks/TaskManagement";
-import SubmissionManagement from "../pages/Submissions/SubmissionManagement";
 import Login from "../pages/Login/Login";
+import BlogManagement from "../pages/Blogs/BlogsManagement";
 
 const router = createBrowserRouter([
   {
@@ -12,25 +9,9 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <DashboardManagement />,
-      },
-      {
-        path: "/users",
+        path: "/blogs",
         element: (
-            <UserManagement />
-        ),
-      },
-      {
-        path: "/tasks",
-        element: (
-            <TaskManagement />
-        ),
-      },
-      {
-        path: "/submission/:taskId",
-        element: (
-            <SubmissionManagement />
+            <BlogManagement />
         ),
       },
     ]

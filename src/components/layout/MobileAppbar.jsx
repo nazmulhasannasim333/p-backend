@@ -91,15 +91,15 @@ import { logout } from "../../redux/features/auth/authSlice.js";
             >
               <MenuItem onClick={() => {
                 handleCloseUserMenu();
-                navigate(`/`);
+                navigate(`/blogs`);
               }}>
-                <DashboardIcon sx={{ fontSize: 20, mr: "7px" }} /> Dashboard
+                <DashboardIcon sx={{ fontSize: 20, mr: "7px" }} /> Blogs
               </MenuItem>
               <MenuItem onClick={() => {
                 handleCloseUserMenu();
-                navigate(`/`);
+                navigate(`/projects`);
               }}>
-                <ManageAccountsIcon sx={{ fontSize: 20, mr: "7px" }} /> Profile
+                <ManageAccountsIcon sx={{ fontSize: 20, mr: "7px" }} /> Projects
               </MenuItem>
               <Divider />
               <MenuItem onClick={handleLogout}>
